@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>My test page</title>
+  </head>
+  <body>
+    <script>
+      let a = fetch('coffee.jpg');
+      let b = fetch('tea.jpg');
+      let c = fetch('description.txt');
+      let d = fetch('page.html');
+
+      function fetchAndDecode(url, type) {
+        return fetch(url).then(response => {
+          if(!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          } else {
+            if(type === 'blob') {
+              return response.blob();
+            } else if(type === 'text') {
+              return response.text();
+            }
+          }
+        })
+        .catch(e => {
+          console.log(`There has been a problem with your fetch operation for resource "${url}": ` + e.message);
+        });
+      }
+
+      let coffee = fetchAndDecode('coffee.jpg', 'blob');
+      let tea = fetchAndDecode('tea.jpg', 'blob');
+      let description = fetchAndDecode('description.txt', 'text');
+
+      console.log(coffee);
+      console.log(tea);
+      console.log(description);
+
+      Promise.all([coffee, tea, description]).then(values =>{
+        console.log(values);
+
+        // Store each value returned from the promises in separate variables
+        let objectURL1 = URL.createObjectURL(values[0]);
+        let objectURL2 = URL.createObjectURL(values[1]);
+        let descText = values[2];
+
+        // Display the images in <img> elements
+        // Create element for images
+        let image1 = document.createElement('img');
+        let image2 = document.createElement('img');
+        // Assign src to img
+        image1.src = objectURL1;
+        image2.src = objectURL2;
+        // Append img's to body
+        document.body.appendChild(image1);
+        document.body.appendChild(image2);
+
+        // Display the text in a paragraph
+        // Create element for p
+        let para = document.createElement('p');
+        // Assign text to p
+        para.textContent = descText;
+        // Append p to body
+        document.body.appendChild(para);
+      });
+
+    </script>
+
+  </body>
+</html>
