@@ -6,5 +6,12 @@
   </head>
   <body>
     <p>This is my page</p>
+    <script>
+      let a = fetch('coffee.jpg');
+      let b = fetch('tea.jpg');
+      let c = fetch('description.txt');
+
+      Promise.all([a, b, c]).then( values => values.forEach(element => console.log(element.url)))
+    </script>
   </body>
 </html>
